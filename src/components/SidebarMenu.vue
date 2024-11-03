@@ -7,27 +7,20 @@
       <li>
         <router-link to="/">Home</router-link>
       </li>
-      <li @click="toggleSubmenu('threshold')" class="menu-item">
+      <li class="menu-item" :class="{ open: isSubmenuOpen.threshold }"
+          @click="toggleSubmenu('threshold')">
         <span>Threshold</span>
-        <span class="arrow" :class="{ open: isSubmenuOpen.training }">&#10095;</span>
+        <span class="arrow" :class="{ open: isSubmenuOpen.threshold }">&#10095;</span>
         <ul v-if="isSubmenuOpen.threshold" class="submenu">
-          <li><router-link to="/training/basics">Otsu</router-link></li>
+          <li><router-link to="/otsu">Otsu</router-link></li>
         </ul>
       </li>
-      <li @click="toggleSubmenu('training')" class="menu-item">
-        <span>Training</span>
-        <span class="arrow" :class="{ open: isSubmenuOpen.training }">&#10095;</span>
-        <ul v-if="isSubmenuOpen.training" class="submenu">
-          <li><router-link to="/training/basics">Basics</router-link></li>
-          <li><router-link to="/training/advanced">Advanced</router-link></li>
-        </ul>
-      </li>
-      <li @click="toggleSubmenu('predict')" class="menu-item">
-        <span>Predict</span>
-        <span class="arrow" :class="{ open: isSubmenuOpen.predict }">&#10095;</span>
-        <ul v-if="isSubmenuOpen.predict" class="submenu">
-          <li><router-link to="/predict/classification">Classification</router-link></li>
-          <li><router-link to="/predict/regression">Regression</router-link></li>
+      <li @click="toggleSubmenu('stardist')" class="menu-item">
+        <span>Stardist Model</span>
+        <span class="arrow" :class="{ open: isSubmenuOpen.stardist }">&#10095;</span>
+        <ul v-if="isSubmenuOpen.stardist" class="submenu">
+          <li><router-link to="/training">Training</router-link></li>
+          <li><router-link to="/predict">Predict</router-link></li>
         </ul>
       </li>
     </ul>
@@ -47,8 +40,7 @@ export default {
     return {
       isSubmenuOpen: {
         threshold: false,
-        training: false,
-        predict: false
+        stardist: false
       }
     };
   },
@@ -71,7 +63,7 @@ export default {
   position: fixed;
   top: 0;
   left: -250px;
-  background-color: #222831;
+  background-color: #212529;
   padding-top: 20px;
   transition: left 0.3s;
 }
@@ -86,9 +78,9 @@ export default {
 }
 
 .sidebar ul li {
-  padding: 12px 16px;
+  padding: 12px 15px 12px 23px;
   font-size: 15px;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   position: relative;
 }
@@ -97,10 +89,6 @@ export default {
   color: white;
   text-decoration: none;
   display: block;
-}
-
-.sidebar ul li a:hover {
-  color: #76ABAE;
 }
 
 /* Mũi tên */
@@ -112,6 +100,10 @@ export default {
 
 .menu-item .arrow.open {
   transform: rotate(90deg); /* Xoay mũi tên sang phải khi mở submenu */
+}
+
+.menu-item.open {
+  background: #1a1e21;
 }
 
 .submenu {

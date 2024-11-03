@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Training from '../views/TrainingPage.vue';
 import Predict from '../views/PredictPage.vue';
+import Otsu from '../views/OtsuPage.vue';
 import Home from '../views/HomePage.vue';
 
 const routes = [
@@ -18,6 +19,11 @@ const routes = [
         path: '/predict',
         name: 'Predict',
         component: Predict
+    },
+    {
+        path: '/otsu',
+        name: 'Otsu',
+        component: Otsu
     }
 ];
 
