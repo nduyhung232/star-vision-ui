@@ -1,10 +1,10 @@
 <template>
-  <HeaderComp :title="'Otsu Page'"/>
+  <HeaderComp :title="'Canny Page'"/>
   <div class="flex items-center p-4">
     <input type="file" @change="onFileChange" accept=".png;.jpg"/>
     <CommonButton
-        @click="applyThreshold()"
-        name="Apply Threshold"
+        @click="applyCanny()"
+        name="Apply Canny"
         :custom-classes="'py-4'"
     >
     </CommonButton>
@@ -55,8 +55,8 @@ const onFileChange = (event) => {
   }
 };
 
-const applyThreshold = async () => {
-  const url = 'http://localhost:5000/api/v1.0/threshold';
+const applyCanny = async () => {
+  const url = 'http://localhost:5000/api/v1.0/canny';
 
   const formData = new FormData();
   formData.append('image', model.imageOrigin);

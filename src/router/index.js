@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Training from '../views/TrainingPage.vue';
 import Predict from '../views/PredictPage.vue';
 import Otsu from '../views/OtsuPage.vue';
+import Canny from '../views/CannyPage.vue';
 import Home from '../views/HomePage.vue';
 
 const routes = [
@@ -24,6 +25,11 @@ const routes = [
         path: '/otsu',
         name: 'Otsu',
         component: Otsu
+    },
+    {
+        path: '/canny',
+        name: 'Canny',
+        component: Canny
     }
 ];
 

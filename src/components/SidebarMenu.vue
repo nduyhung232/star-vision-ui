@@ -15,6 +15,14 @@
           <li><router-link to="/otsu">Otsu</router-link></li>
         </ul>
       </li>
+      <li class="menu-item" :class="{ open: isSubmenuOpen.edge_segmentation }"
+          @click="toggleSubmenu('edge_segmentation')">
+        <span>Edge Segmentation</span>
+        <span class="arrow" :class="{ open: isSubmenuOpen.edge_segmentation }">&#10095;</span>
+        <ul v-if="isSubmenuOpen.edge_segmentation" class="submenu">
+          <li><router-link to="/canny">Canny</router-link></li>
+        </ul>
+      </li>
       <li @click="toggleSubmenu('stardist')" class="menu-item">
         <span>Stardist Model</span>
         <span class="arrow" :class="{ open: isSubmenuOpen.stardist }">&#10095;</span>
@@ -40,6 +48,7 @@ export default {
     return {
       isSubmenuOpen: {
         threshold: false,
+        edge_segmentation: false,
         stardist: false
       }
     };
