@@ -15,15 +15,9 @@
       <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView" alt="Uploaded Image"/>
     </div>
     <div class="mx-1">
-      <ImageComp v-if="model.resultImage" title="Result Image" :source="model.resultImage" alt="Uploaded Image"/>
+      <ImageComp v-if="model.canny_image_url" title="Histogram Image" :source="model.canny_image_url" alt="Uploaded Image"/>
     </div>
   </div>
-  <div class="">
-    <div class="mx-1">
-      <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
-    </div>
-  </div>
-
 
 </template>
 
@@ -37,8 +31,7 @@ import axios from "axios";
 const model = reactive({
   imageOriginView: null,
   imageOrigin: null,
-  histogram: null,
-  resultImage: null
+  canny_image_url: null
 })
 
 const onFileChange = (event) => {
@@ -63,8 +56,7 @@ const applyCanny = async () => {
 
   try {
     const response = await axios.post(url, formData, {});
-    model.histogram = 'http://localhost:5000' + response.data.histogram_url
-    model.resultImage = 'http://localhost:5000' + response.data.thresholded_image_url
+    model.canny_image_url = 'http://localhost:5000' + response.data.canny_image_url
   } catch (error) {
     console.error(error);
     alert(error.response.data.message);

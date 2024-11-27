@@ -9,21 +9,17 @@
     >
     </CommonButton>
   </div>
-  <div class="flex h-1/5.
-">
+  <div class="flex h-1/5">
     <div class="mx-1">
       <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView" alt="Uploaded Image"/>
+    </div>
+    <div class="mx-1">
+      <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
     </div>
     <div class="mx-1">
       <ImageComp v-if="model.resultImage" title="Result Image" :source="model.resultImage" alt="Uploaded Image"/>
     </div>
   </div>
-  <div class="">
-    <div class="mx-1">
-      <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
-    </div>
-  </div>
-
 
 </template>
 
