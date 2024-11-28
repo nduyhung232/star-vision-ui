@@ -1,7 +1,7 @@
 <template>
   <HeaderComp :title="'Otsu Page'"/>
   <div class="flex items-center p-4">
-    <input type="file" @change="onFileChange" accept=".png;.jpg"/>
+    <input type="file" @change="uploadImage" accept="image/*"/>
     <CommonButton
         @click="applyThreshold()"
         name="Apply Threshold"
@@ -37,17 +37,37 @@ const model = reactive({
   resultImage: null
 })
 
-const onFileChange = (event) => {
+const uploadImage = async (event) => {
   const file = event.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      model.imageOriginView = e.target.result;
-    };
+    if (file.name.toLowerCase().includes("tiff") || file.name.toLowerCase().includes("tif")) {
+      const formData = new FormData()
+      formData.append('tiff_file', file)
+
+      try {
+        const response = await axios.post('http://localhost:5000/api/v1.0/convert', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          responseType: 'arraybuffer'
+        })
+
+        const blob = new Blob([response.data], {type: 'image/png'})
+        model.imageOriginView = URL.createObjectURL(blob)
+      } catch (error) {
+        alert('Error uploading and converting the image, please try again')
+        console.error('Error uploading and converting the image', error)
+      }
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        model.imageOriginView = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
     model.imageOrigin = file;
     model.histogram = null;
     model.resultImage = null;
-    reader.readAsDataURL(file);
   }
 };
 

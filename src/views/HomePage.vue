@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="h-full">
+    <img src="../assets/image/home_bg.png">
   </div>
 </template>
 
