@@ -1,16 +1,32 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-    <div class="bg-white rounded-lg px-6 pt-6 max-w-sm w-full">
+    <div class="bg-white rounded-lg px-6 pt-6 max-w-xl w-full">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold">Create New Model</h2>
         <button @click="closePopup" class="text-gray-700">&times;</button>
       </div>
       <div class="mb-4">
-        <CommonInput
-            label="Model Name"
-            placeholder="Enter your model name"
-            v-model="name"
-        />
+        <div class="my-4">
+          <CommonInput
+              label="Model Name"
+              placeholder="Enter your model name"
+              v-model="name"
+          />
+        </div>
+        <div class="my-4">
+          <CommonInput
+              label="Epochs"
+              placeholder="Enter your epochs"
+              v-model="epochs"
+          />
+        </div>
+        <div class="my-4">
+          <CommonInput
+              label="Rays"
+              placeholder="Enter your rays"
+              v-model="rays"
+          />
+        </div>
         <div class="file-upload flex items-center mt-5 item">
           <FileUpload v-model="selectedFile"/>
           <CommonButton
@@ -63,6 +79,9 @@ const closePopup = () => {
 };
 
 const name = ref('');
+const epochs = ref('');
+const rays = ref('');
+
 const hasNameEmpty = computed(() => {
   return name.value.trim() === '';
 });
@@ -101,6 +120,8 @@ const trainingModel = async () => {
 
   const formData = new FormData();
   formData.append('modelName', name.value.trim());
+  formData.append('epochs', epochs.value.trim());
+  formData.append('rays', rays.value.trim());
 
   try {
     const response = await axios.post(url, formData, {
