@@ -9,12 +9,29 @@
     >
     </CommonButton>
   </div>
-  <div class="flex h-1/5">
-    <div class="mx-1">
-      <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView" alt="Uploaded Image"/>
+  <div class="flex flex-col">
+    <div class="h-10 t">
+      <span class="text-white mr-4">Objects Counted:</span>
+      <span class="text-lime-400">{{ model.objectsCount }}</span>
     </div>
-    <div class="mx-1">
-      <ImageComp v-if="model.canny_image_url" title="Result Image" :source="model.canny_image_url" alt="Uploaded Image"/>
+    <div class="flex">
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
+                   alt="Uploaded Image"/>
+      </div>
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
+      </div>
+    </div>
+    <div class="flex">
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.edgedImage" title="Canny Image" :source="model.edgedImage"
+                   alt="Uploaded Image"/>
+      </div>
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
+                   alt="Uploaded Image"/>
+      </div>
     </div>
   </div>
 
@@ -30,7 +47,9 @@ import axios from "axios";
 const model = reactive({
   imageOriginView: null,
   imageOrigin: null,
-  canny_image_url: null
+  edgedImage: null,
+  segmentedImage: null,
+  objectsCount: 0
 })
 
 const uploadImage = async (event) => {
@@ -70,12 +89,19 @@ const uploadImage = async (event) => {
 const applyCanny = async () => {
   const url = 'http://localhost:5000/api/v1.0/canny';
 
+  if (!model.imageOrigin) {
+    alert("You need to choose the image first")
+    return
+  }
+
   const formData = new FormData();
   formData.append('image', model.imageOrigin);
 
   try {
     const response = await axios.post(url, formData, {});
-    model.canny_image_url = 'http://localhost:5000' + response.data.canny_image_url
+    model.edgedImage = 'http://localhost:5000' + response.data.edged_image_url
+    model.segmentedImage = 'http://localhost:5000' + response.data.segmented_image_url
+    model.objectsCount = response.data.total_bounding_boxes
   } catch (error) {
     console.error(error);
     alert(error.response.data.message);

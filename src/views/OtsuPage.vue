@@ -9,15 +9,29 @@
     >
     </CommonButton>
   </div>
-  <div class="flex h-1/5">
-    <div class="mx-1">
-      <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView" alt="Uploaded Image"/>
+  <div class="flex flex-col">
+    <div class="h-10 t">
+      <span class="text-white mr-4">Objects Counted:</span>
+      <span class="text-lime-400">{{ model.objectsCount }}</span>
     </div>
-    <div class="mx-1">
-      <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
+    <div class="flex">
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
+                   alt="Uploaded Image"/>
+      </div>
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
+      </div>
     </div>
-    <div class="mx-1">
-      <ImageComp v-if="model.resultImage" title="Result Image" :source="model.resultImage" alt="Uploaded Image"/>
+    <div class="flex">
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.thresholdedImage" title="Thresholded Image" :source="model.thresholdedImage"
+                   alt="Uploaded Image"/>
+      </div>
+      <div class="mx-1 flex-1">
+        <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
+                   alt="Uploaded Image"/>
+      </div>
     </div>
   </div>
 
@@ -34,7 +48,9 @@ const model = reactive({
   imageOriginView: null,
   imageOrigin: null,
   histogram: null,
-  resultImage: null
+  thresholdedImage: null,
+  segmentedImage: null,
+  objectsCount: 0
 })
 
 const uploadImage = async (event) => {
@@ -67,12 +83,19 @@ const uploadImage = async (event) => {
     }
     model.imageOrigin = file;
     model.histogram = null;
-    model.resultImage = null;
+    model.thresholdedImage = null;
+    model.segmentedImage = null;
+    model.objectsCount = 0;
   }
 };
 
 const applyThreshold = async () => {
   const url = 'http://localhost:5000/api/v1.0/threshold';
+
+  if (!model.imageOrigin) {
+    alert("You need to choose the image first")
+    return
+  }
 
   const formData = new FormData();
   formData.append('image', model.imageOrigin);
@@ -80,7 +103,9 @@ const applyThreshold = async () => {
   try {
     const response = await axios.post(url, formData, {});
     model.histogram = 'http://localhost:5000' + response.data.histogram_url
-    model.resultImage = 'http://localhost:5000' + response.data.thresholded_image_url
+    model.thresholdedImage = 'http://localhost:5000' + response.data.thresholded_image_url
+    model.segmentedImage = 'http://localhost:5000' + response.data.segmented_image_url
+    model.objectsCount = response.data.total_bounding_boxes
   } catch (error) {
     console.error(error);
     alert(error.response.data.message);
