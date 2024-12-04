@@ -1,10 +1,10 @@
 <template>
-  <HeaderComp :title="'Canny Page'"/>
+  <HeaderComp :title="'Histogram of Oriented Gradients Page'"/>
   <div class="flex items-center p-4">
     <input type="file" @change="uploadImage" accept="image/*"/>
     <CommonButton
-        @click="applyCanny()"
-        name="Apply Canny"
+        @click="applyHog()"
+        name="Apply HOG"
         :custom-classes="'py-4'"
     >
     </CommonButton>
@@ -20,17 +20,7 @@
                    alt="Uploaded Image"/>
       </div>
       <div class="mx-1 flex-1">
-        <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
-      </div>
-    </div>
-    <div class="flex">
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.hogImage" title="Canny Image" :source="model.hogImage"
-                   alt="Uploaded Image"/>
-      </div>
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
-                   alt="Uploaded Image"/>
+        <ImageComp v-if="model.hogImage" title="Hog Image" :source="model.hogImage" alt="Uploaded Image"/>
       </div>
     </div>
   </div>
@@ -47,7 +37,7 @@ import axios from "axios";
 const model = reactive({
   imageOriginView: null,
   imageOrigin: null,
-  edgedImage: null,
+  hogImage: null,
   segmentedImage: null,
   objectsCount: 0
 })
@@ -86,8 +76,8 @@ const uploadImage = async (event) => {
   }
 };
 
-const applyCanny = async () => {
-  const url = 'http://localhost:5000/api/v1.0/canny';
+const applyHog = async () => {
+  const url = 'http://localhost:5000/api/v1.0/hog';
 
   if (!model.imageOrigin) {
     alert("You need to choose the image first")
@@ -99,8 +89,7 @@ const applyCanny = async () => {
 
   try {
     const response = await axios.post(url, formData, {});
-    model.hogImage = 'http://localhost:5000' + response.data.edged_image_url
-    model.segmentedImage = 'http://localhost:5000' + response.data.segmented_image_url
+    model.hogImage = 'http://localhost:5000' + response.data.hog_image_url
     model.objectsCount = response.data.total_bounding_boxes
   } catch (error) {
     console.error(error);

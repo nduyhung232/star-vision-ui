@@ -4,6 +4,7 @@ import Predict from '../views/PredictPage.vue';
 import Otsu from '../views/OtsuPage.vue';
 import Canny from '../views/CannyPage.vue';
 import Home from '../views/HomePage.vue';
+import HogPage from "@/views/HogPage.vue";
 
 const routes = [
     {
@@ -30,6 +31,11 @@ const routes = [
         path: '/canny',
         name: 'Canny',
         component: Canny
+    },
+    {
+        path: '/hog',
+        name: 'hog',
+        component: HogPage
     }
 ];
 

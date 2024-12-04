@@ -23,6 +23,9 @@
           <li><router-link to="/canny">Canny</router-link></li>
         </ul>
       </li>
+      <li>
+        <router-link to="/hog">Histogram of Oriented Gradients</router-link>
+      </li>
       <li @click="toggleSubmenu('stardist')" class="menu-item">
         <span>Stardist Model</span>
         <span class="arrow" :class="{ open: isSubmenuOpen.stardist }">&#10095;</span>
@@ -49,6 +52,7 @@ export default {
       isSubmenuOpen: {
         threshold: false,
         edge_segmentation: false,
+        hog: false,
         stardist: false
       }
     };
