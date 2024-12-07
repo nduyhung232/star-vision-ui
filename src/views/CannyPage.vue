@@ -1,40 +1,36 @@
 <template>
-  <HeaderComp :title="'Canny Page'"/>
-  <div class="flex items-center p-4">
-    <input type="file" @change="uploadImage" accept="image/*"/>
-    <CommonButton
-        @click="applyCanny()"
-        name="Apply Canny"
-        :custom-classes="'py-4'"
-    >
-    </CommonButton>
-  </div>
-  <div class="flex flex-col">
-    <div class="h-10 t">
-      <span class="text-white mr-4">Objects Counted:</span>
-      <span class="text-lime-400">{{ model.objectsCount }}</span>
+  <div class="h-screen overflow-y-auto bg-gray-100 p-4">
+    <HeaderComp :title="'Canny Page'"/>
+    <div class="flex items-center p-4">
+      <input type="file" @change="uploadImage" accept="image/*"/>
+      <CommonButton
+          @click="applyCanny()"
+          name="Apply Canny"
+          :custom-classes="'py-4'"
+      >
+      </CommonButton>
     </div>
-    <div class="flex">
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
-                   alt="Uploaded Image"/>
+    <div class="flex flex-col">
+      <div class="h-10">
+        <span class="text-white mr-4">Objects Counted:</span>
+        <span class="text-lime-400">{{ model.objectsCount }}</span>
       </div>
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
-      </div>
-    </div>
-    <div class="flex">
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.hogImage" title="Canny Image" :source="model.hogImage"
-                   alt="Uploaded Image"/>
-      </div>
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
-                   alt="Uploaded Image"/>
+      <div class="flex">
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
+                     alt="Uploaded Image"/>
+        </div>
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.hogImage" title="Canny Image" :source="model.hogImage"
+                     alt="Uploaded Image"/>
+        </div>
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
+                     alt="Uploaded Image"/>
+        </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>

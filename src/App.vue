@@ -38,7 +38,6 @@ export default {
 
 .content {
   margin-left: 250px; /* Same width as the sidebar */
-  padding: 20px;
   width: 100%;
 }
 
@@ -48,5 +47,24 @@ export default {
 
 .sidebar + .content {
   margin-left: 0;
+}
+
+/* Thanh cuộn thanh lịch */
+::-webkit-scrollbar {
+  width: 8px; /* Độ rộng của scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #31363f; /* Màu nền track */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222831; /* Màu thanh cuộn */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #262626; /* Màu khi hover */
 }
 </style>

@@ -1,40 +1,41 @@
 <template>
-  <HeaderComp :title="'Otsu Page'"/>
-  <div class="flex items-center p-4">
-    <input type="file" @change="uploadImage" accept="image/*"/>
-    <CommonButton
-        @click="applyThreshold()"
-        name="Apply Threshold"
-        :custom-classes="'py-4'"
-    >
-    </CommonButton>
+  <div class="h-screen overflow-y-auto bg-gray-100 p-4">
+    <HeaderComp :title="'Otsu Page'"/>
+    <div class="flex items-center p-4">
+      <input type="file" @change="uploadImage" accept="image/*"/>
+      <CommonButton
+          @click="applyThreshold()"
+          name="Apply Threshold"
+          :custom-classes="'py-4'"
+      >
+      </CommonButton>
+    </div>
+    <div class="flex flex-col max-h-96">
+      <div class="h-10">
+        <span class="text-white mr-4">Objects Counted:</span>
+        <span class="text-lime-400">{{ model.objectsCount }}</span>
+      </div>
+      <div class="flex mb-20">
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
+                     alt="Uploaded Image"/>
+        </div>
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.thresholdedImage" title="Thresholded Image" :source="model.thresholdedImage"
+                     alt="Uploaded Image"/>
+        </div>
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
+                     alt="Uploaded Image"/>
+        </div>
+      </div>
+      <div class="flex">
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="flex flex-col">
-    <div class="h-10 t">
-      <span class="text-white mr-4">Objects Counted:</span>
-      <span class="text-lime-400">{{ model.objectsCount }}</span>
-    </div>
-    <div class="flex">
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
-                   alt="Uploaded Image"/>
-      </div>
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.histogram" title="Histogram Image" :source="model.histogram" alt="Uploaded Image"/>
-      </div>
-    </div>
-    <div class="flex">
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.thresholdedImage" title="Thresholded Image" :source="model.thresholdedImage"
-                   alt="Uploaded Image"/>
-      </div>
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.segmentedImage" title="Segmented Image" :source="model.segmentedImage"
-                   alt="Uploaded Image"/>
-      </div>
-    </div>
-  </div>
-
 </template>
 
 <script setup>

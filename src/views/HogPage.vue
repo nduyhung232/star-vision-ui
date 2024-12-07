@@ -1,30 +1,34 @@
 <template>
-  <HeaderComp :title="'Histogram of Oriented Gradients Page'"/>
-  <div class="flex items-center p-4">
-    <input type="file" @change="uploadImage" accept="image/*"/>
-    <CommonButton
-        @click="applyHog()"
-        name="Apply HOG"
-        :custom-classes="'py-4'"
-    >
-    </CommonButton>
-  </div>
-  <div class="flex flex-col">
-    <div class="h-10 t">
-      <span class="text-white mr-4">Objects Counted:</span>
-      <span class="text-lime-400">{{ model.objectsCount }}</span>
+  <div class="h-screen overflow-y-auto bg-gray-100 p-4">
+    <HeaderComp :title="'Histogram of Oriented Gradients Page'"/>
+    <div class="flex items-center p-4">
+      <input type="file" @change="uploadImage" accept="image/*"/>
+      <CommonButton
+          @click="applyHog()"
+          name="Apply HOG"
+          :custom-classes="'py-4'"
+      >
+      </CommonButton>
     </div>
-    <div class="flex">
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
-                   alt="Uploaded Image"/>
+    <div class="flex flex-col">
+      <div class="h-10">
+        <span class="text-white mr-4">Objects Counted:</span>
+        <span class="text-lime-400">{{ model.objectsCount }}</span>
       </div>
-      <div class="mx-1 flex-1">
-        <ImageComp v-if="model.hogImage" title="Hog Image" :source="model.hogImage" alt="Uploaded Image"/>
+      <div class="flex">
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.imageOriginView" title="Original Image" :source="model.imageOriginView"
+                     alt="Uploaded Image"/>
+        </div>
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.hogImage" title="Hog Image" :source="model.hogImage" alt="Uploaded Image"/>
+        </div>
+        <div class="mx-1 flex-1">
+          <ImageComp v-if="model.segmentedImage" title="Hog Image" :source="model.segmentedImage" alt="Uploaded Image"/>
+        </div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
@@ -72,7 +76,8 @@ const uploadImage = async (event) => {
     }
     model.imageOrigin = file;
     model.histogram = null;
-    model.resultImage = null;
+    model.segmentedImage = null;
+    model.hogImage = null;
   }
 };
 
@@ -90,6 +95,7 @@ const applyHog = async () => {
   try {
     const response = await axios.post(url, formData, {});
     model.hogImage = 'http://localhost:5000' + response.data.hog_image_url
+    model.segmentedImage = 'http://localhost:5000' + response.data.segmented_image_url
     model.objectsCount = response.data.total_bounding_boxes
   } catch (error) {
     console.error(error);

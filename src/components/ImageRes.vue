@@ -239,7 +239,6 @@ export default {
   align-items: center;
   justify-content: center;
   row-gap: 20px;
-  margin-bottom: 100px;
 }
 
 .image {

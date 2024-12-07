@@ -1,84 +1,87 @@
 <template>
-  <HeaderComp :title="'Predict Page'"/>
-  <div class="flex flex-col">
-    <span v-if="!model.image" class="caution">Please upload image with jpg, png or tif format and less than 10mb</span>
-    <div class="flex">
-      <div class="py-3 flex pr-10">
-        <label class="text-white basis-48 pr-3" for="modelOption">Type Of Model:</label>
-        <select id="modelOption" v-model="model.type">
-          <option></option>
-          <option v-for="item of models" :key="item.name">
-            {{ item.model_name }}
-          </option>
-        </select>
+  <div class="h-screen overflow-y-auto bg-gray-100 p-4">
+    <HeaderComp :title="'Predict Page'"/>
+    <div class="flex flex-col">
+      <span v-if="!model.image"
+            class="caution">Please upload image with jpg, png or tif format and less than 10mb</span>
+      <div class="flex">
+        <div class="py-3 flex pr-10">
+          <label class="text-white basis-48 pr-3" for="modelOption">Type Of Model:</label>
+          <select id="modelOption" v-model="model.type">
+            <option></option>
+            <option v-for="item of models" :key="item.name">
+              {{ item.model_name }}
+            </option>
+          </select>
+        </div>
+        <div class="py-3 flex">
+          <label class="text-white basis-48 pr-3" for="colorMapOption">Color Map:</label>
+          <select id="colorMapOption" v-model="model.colorMap">
+            <option value="plasma">Plasma</option>
+            <option value="jet">Jet</option>
+            <option value="viridis">Viridis</option>
+            <option value="random_label_cmap">Random Label</option>
+          </select>
+        </div>
       </div>
-      <div class="py-3 flex">
-        <label class="text-white basis-48 pr-3" for="colorMapOption">Color Map:</label>
-        <select id="colorMapOption" v-model="model.colorMap">
-          <option value="plasma">Plasma</option>
-          <option value="jet">Jet</option>
-          <option value="viridis">Viridis</option>
-          <option value="random_label_cmap">Random Label</option>
-        </select>
+      <div v-if="!model.image" class="upload-box" @click="openFileSelector" :class="notAllowed && 'not-allowed'">
+        <SpinnerLoading v-if="showSpinner"/>
+        <input ref="fileInput" type="file" @change="uploadImage" accept="image/*" style="display: none;"
+               :disabled="notAllowed">
+        <div class="upload__message">
+          <span>Click to upload file</span>
+        </div>
       </div>
-    </div>
-    <div v-if="!model.image" class="upload-box" @click="openFileSelector" :class="notAllowed && 'not-allowed'">
-      <SpinnerLoading v-if="showSpinner"/>
-      <input ref="fileInput" type="file" @change="uploadImage" accept="image/*" style="display: none;"
-             :disabled="notAllowed">
-      <div class="upload__message">
-        <span>Click to upload file</span>
+      <div class="flex mt-16">
+        <ImageComp v-if="model.image" title="Original Image" :source="model.image" alt="Uploaded Image"/>
+        <div class="flex flex-col justify-center mx-5">
+          <CommonButton
+              @click="handleSegmentation"
+              name="Segment >>"
+              :is-loading="showSpinner"
+              v-if="model.image"
+          >
+            <SpinnerLoading v-if="showSpinner" size="small" colorProp="grey"/>
+          </CommonButton>
+        </div>
+        <ImageRes
+            v-if="model.imageRes"
+            title="Predicted Image"
+            :source="model.imageRes"
+            alt="Predicted Image"
+            :points="model.points"
+            :coordArray="model.coord"
+            :strokeLine="model.strokeLine"
+        />
       </div>
-    </div>
-    <div class="flex mt-16">
-      <ImageComp v-if="model.image" title="Original Image" :source="model.image" alt="Uploaded Image"/>
-      <div class="flex flex-col justify-center mx-5">
+      <div class="flex h-8">
+        <div class="mr-16 text-lime-400" v-if="model.image">
+          <span class="text-white mr-4">Duration:</span>
+          <span>{{ model.duration }} ms</span>
+        </div>
+        <div class="mr-16 text-lime-400" v-if="model.image">
+          <span class="text-white mr-4">Objects Counted: </span>
+          <span>{{ model.objectsCount }}</span>
+        </div>
         <CommonButton
-            @click="handleSegmentation"
-            name="Segment >>"
-            :is-loading="showSpinner"
+            @click="downloadImage"
             v-if="model.image"
+            name="Download"
+            :disabled="!isSegment"
+            :custom-classes="'mr-16'"
         >
-          <SpinnerLoading v-if="showSpinner" size="small" colorProp="grey"/>
         </CommonButton>
       </div>
-      <ImageRes
-          v-if="model.imageRes"
-          title="Predicted Image"
-          :source="model.imageRes"
-          alt="Predicted Image"
-          :points="model.points"
-          :coordArray="model.coord"
-          :strokeLine="model.strokeLine"
-      />
-    </div>
-    <div class="flex h-8">
-      <div class="mr-16 text-lime-400" v-if="model.image">
-        <span class="text-white mr-4">Duration:</span>
-        <span>{{ model.duration }} ms</span>
+      <div class="w-full flex justify-end">
+        <CommonButton
+            @click="resetImage"
+            name="Try New Image"
+            v-if="model.image"
+            :disabled="!isSegment"
+            :custom-classes="'mr-16'"
+        >
+        </CommonButton>
       </div>
-      <div class="mr-16 text-lime-400" v-if="model.image">
-        <span class="text-white mr-4">Objects Counted: </span>
-        <span>{{ model.objectsCount }}</span>
-      </div>
-      <CommonButton
-          @click="downloadImage"
-          v-if="model.image"
-          name="Download"
-          :disabled="!isSegment"
-          :custom-classes="'mr-16'"
-      >
-      </CommonButton>
-    </div>
-    <div class="w-full flex justify-end">
-      <CommonButton
-          @click="resetImage"
-          name="Try New Image"
-          v-if="model.image"
-          :disabled="!isSegment"
-          :custom-classes="'mr-16'"
-      >
-      </CommonButton>
     </div>
   </div>
 </template>
